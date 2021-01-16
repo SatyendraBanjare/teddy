@@ -1,9 +1,9 @@
-# On-Going
+# WIP
 - ZeOS
 - dotfiles
 
-# On-Hold
+# Hold
 - software-foundations
 
-# Later
+# Backlog
 - itp
