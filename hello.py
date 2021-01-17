@@ -19,7 +19,7 @@ def intialize():
 def sync():
     click.echo('Sync')
 
-@cli.command('todo', short_help='count To-Do items')  
+@cli.command('todo', short_help='count To-Do items in WIP projects')  
 def todo():
     click.echo('todo')
 
