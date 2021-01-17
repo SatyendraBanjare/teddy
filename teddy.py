@@ -84,11 +84,11 @@ def cli():
 def intirepos():
     click.echo(intialize_wip_repos())
 
-@cli.command('sync', short_help='sync the NOTES repo')  
+@cli.command('sync', short_help='sync the notes repo')  
 def sync():
     click.echo(sync_notes())
 
-@cli.command('todo', short_help='count To-Do items in WIP projects')  
+@cli.command('todo', short_help='count To-Do items in README.md of WIP projects')  
 def todo():
     click.echo(count_todo())
 
