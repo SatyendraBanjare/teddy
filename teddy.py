@@ -57,6 +57,25 @@ def sync_notes():
     except:
         print('Some error occured while pushing the code')    
 
+def publish_links():
+    open(notes_repo_path + "index.md",'w').write("")
+    index_file = open(notes_repo_path + "index.md",'a')
+    index_file.write("# My notes \n")
+    index_file.write("-------------------------------\n\n")
+    dir_list = os.listdir(notes_repo_path)
+    for dir_name in dir_list :
+        if os.path.isdir(os.path.join(notes_repo_path,dir_name)) and dir_name != '.git':
+            index_file.write("### "+dir_name+"\n")
+            for note in os.listdir(os.path.join(notes_repo_path,dir_name)):
+                index_file.write("- ["+note+"](./"+dir_name+"/"+note+")\n")
+            index_file.write("\n<br><br>\n\n")
+
+    index_file.write("\n-------------------------------\n\n")
+
+    for file_name in dir_list :
+        if not os.path.isdir(os.path.join(notes_repo_path,file_name)) and file_name != 'index.md':
+            index_file.write("- ["+file_name+"](./"+file_name+")\n")
+
 @click.group()
 def cli():
     pass
@@ -72,6 +91,10 @@ def sync():
 @cli.command('todo', short_help='count To-Do items in WIP projects')  
 def todo():
     click.echo(count_todo())
+
+@cli.command('publish', short_help='publish to index.md of notes repo')  
+def publish():
+    click.echo(publish_links())
 
 if __name__ == '__main__':
     cli()
