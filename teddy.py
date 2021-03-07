@@ -9,7 +9,8 @@ from git import Repo
 git_ssh_prefix = "git@github.com:SatyendraBanjare/"
 
 projects_path = "/home/satyendra/projects"
-project_config = open("PROJECTS.md","r")
+teddy_path = "/home/satyendra/projects/teddy"
+project_config = open(os.path.join(teddy_path, "PROJECTS.md"),"r")
 
 # config for notes repo
 notes_repo_path = "/home/satyendra/notes/"
