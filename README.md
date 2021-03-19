@@ -2,17 +2,19 @@
 
 Small cli to manage projects & notes.
 
-```sh
-Usage: teddy [OPTIONS] COMMAND [ARGS]...
+```
+Usage: teddy.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --help  Show this message and exit.
 
 Commands:
-  initrepos  initialize with the WIP repos in PROJECTS.md
-  publish    publish to index.md of notes repo
-  sync       sync the NOTES repo
-  todo       count To-Do items in README.md of WIP projects
+  create           Create docker container for the project in Projects.md
+  initrepos        initialize with the WIP repos in PROJECTS.md
+  list_containers  list docker containers
+  publish          publish to index.md of notes repo
+  sync             sync the notes repo
+  todo             count To-Do items in README.md of WIP projects
 ```
 
 # config

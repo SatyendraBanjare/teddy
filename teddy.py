@@ -97,5 +97,13 @@ def todo():
 def publish():
     click.echo(publish_links())
 
+@cli.command('create', short_help='Create docker container for the project in Projects.md')  
+def create():
+    click.echo("hi")
+
+@cli.command('list_containers', short_help='list docker containers')  
+def list_containers():
+    click.echo("hi")
+
 if __name__ == '__main__':
     cli()
