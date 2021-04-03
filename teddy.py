@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import click
-import os, json
+import os, json, subprocess
 from markdown_to_json.vendor import CommonMark
 from markdown_to_json.markdown_to_json import Renderer, CMarkASTNester
 from git import Repo
@@ -77,6 +77,24 @@ def publish_links():
         if not os.path.isdir(os.path.join(notes_repo_path,file_name)) and file_name != 'index.md':
             index_file.write("- ["+file_name+"](./"+file_name+")\n")
 
+def list_project_containers():
+    bashCmd = ["docker", "ps","-a", "--format","{ \"IMAGE\":\"{{.Image}}\", \"NAME\":\"{{.Names}}\" ,\"STATUS\":\"{{.Status}}\" }"]
+    process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    if(not error):
+        containers = output.decode("utf-8").strip().splitlines()
+        print(containers)
+        for container in containers :
+            data = json.loads(container)
+            print(data)
+
+def create_and_publish_container(projectname):
+    print("Hello")
+
+#######################################################
+# Commands 
+#######################################################
+
 @click.group()
 def cli():
     pass
@@ -97,13 +115,21 @@ def todo():
 def publish():
     click.echo(publish_links())
 
-@cli.command('create', short_help='Create docker container for the project in Projects.md')  
-def create():
-    click.echo("hi")
+@cli.command('create',short_help='Create docker container for the given project name')  
+@click.argument('projectname')
+def create(projectname):
+    """
+    PROJECTNAME is the name of the project to be build
+    and its container published, must be present in [projects_path]
+    """
+    if(projectname in dir_list):
+        click.echo(create_and_publish_container(projectname))
+    else:
+        print("Given project does not exist!!\nClone it first in "+projects_path)
 
 @cli.command('list_containers', short_help='list docker containers')  
 def list_containers():
-    click.echo("hi")
+    click.echo(list_project_containers())
 
 if __name__ == '__main__':
     cli()
