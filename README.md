@@ -3,13 +3,13 @@
 Small cli to manage projects & notes.
 
 ```
-Usage: teddy.py [OPTIONS] COMMAND [ARGS]...
+Usage: teddy [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --help  Show this message and exit.
 
 Commands:
-  create           Create docker container for the project in Projects.md
+  create           Create docker container for the given project name
   initrepos        initialize with the WIP repos in PROJECTS.md
   list_containers  list docker containers
   publish          publish to index.md of notes repo
