@@ -78,18 +78,39 @@ def publish_links():
             index_file.write("- ["+file_name+"](./"+file_name+")\n")
 
 def list_project_containers():
-    bashCmd = ["docker", "ps","-a", "--format","{ \"IMAGE\":\"{{.Image}}\", \"NAME\":\"{{.Names}}\" ,\"STATUS\":\"{{.Status}}\" }"]
+    bashCmd = ["docker", "ps","-a", "--format","{ \"NAME\":\"{{.Names}}\" , \"IMAGE\":\"{{.Image}}\" , \"STATUS\":\"{{.Status}}\" }"]
     process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
     output, error = process.communicate()
     if(not error):
         containers = output.decode("utf-8").strip().splitlines()
-        print(containers)
         for container in containers :
             data = json.loads(container)
-            print(data)
+            if ("teddy-image-" in data["IMAGE"]) and ("teddy-container-" in data["NAME"]):
+                project = "\nPROJECT : "+data["IMAGE"].replace("teddy-image-","")+"\n****************************\n"
+                print(project,data,"\n")
 
 def create_and_publish_container(projectname):
-    print("Hello")
+    project_image_name = "teddy-image-"+projectname
+    print("\nBUILDING IMAGE FOR : "+projectname+"\n**************************************************\n")
+    get_ssh_key_cmd = "MY_KEY=$(cat ~/.ssh/id_rsa)"
+    goto_proj_dir_cmd = "cd "+projects_path+"/"+projectname+"/.devcontainer"
+    build_image_cmd = "docker build . --build-arg SSH_KEY=\"$MY_KEY\" -t "+ project_image_name
+    full_command = f"""{get_ssh_key_cmd} && {goto_proj_dir_cmd} && {build_image_cmd}"""
+    build_image_exit_code = os.system(full_command)
+    # create a container for the built image
+    if(not build_image_exit_code):
+        print("\nSuccessfully created image :"+project_image_name)
+        project_container_name = "teddy-container-"+projectname
+        print("\nCREATING CONTAINER FOR : "+project_image_name+"\n**************************************************\n")
+        build_container_cmd = "docker run -t -d --name "+project_container_name+" "+project_image_name
+        build_container_exit_code = os.system(build_container_cmd)
+        if(not build_container_exit_code):
+            print("\nSuccessfully Created container : "+project_container_name)
+            print("\n\nNOW THAT EVERY THING IS SET\n!! START WORKING NOW !!\n\n")
+        else:
+            print("\nUnable to create container : "+project_container_name)
+    else:
+        print("\nUnable to create image : "+project_image_name)
 
 #######################################################
 # Commands 
