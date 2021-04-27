@@ -76,7 +76,7 @@ def publish_links():
     for dir_name in dir_list :
         if os.path.isdir(os.path.join(notes_repo_path,dir_name)) and dir_name != '.git':
             index_file.write("### "+dir_name+"\n")
-            for note in os.listdir(os.path.join(notes_repo_path,dir_name)):
+            for note in sorted(os.listdir(os.path.join(notes_repo_path,dir_name))):
                 index_file.write("- ["+note.replace(".md","")+"](./"+dir_name+"/"+note+")\n")
             index_file.write("\n\n")
 
