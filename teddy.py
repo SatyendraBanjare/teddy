@@ -34,7 +34,10 @@ def count_todo():
         if repo in dir_list:
             filePath = os.path.join(projects_path, repo, "README.md")
             fileName = open(filePath,"r")
-            count+=len(extract_json(fileName)['TODO'])
+            if extract_json(fileName)['TODO'] :
+                count+=len(extract_json(fileName)['TODO'])
+            else:
+                exit
     return count
 
 def intialize_wip_repos():
@@ -61,21 +64,23 @@ def sync_notes():
 def publish_links():
     open(notes_repo_path + "index.md",'w').write("")
     index_file = open(notes_repo_path + "index.md",'a')
-    index_file.write("# My notes \n")
-    index_file.write("-------------------------------\n\n")
-    dir_list = os.listdir(notes_repo_path)
+    index_file.write("# My notes \n\n")
+    dir_list = sorted(os.listdir(notes_repo_path))
+
+    for file_name in dir_list :
+        if not os.path.isdir(os.path.join(notes_repo_path,file_name)) and file_name != 'index.md':
+            index_file.write("- ["+file_name.replace(".md","")+"](./"+file_name+")\n")
+
+    index_file.write("\n-------------------------------\n\n")
+
     for dir_name in dir_list :
         if os.path.isdir(os.path.join(notes_repo_path,dir_name)) and dir_name != '.git':
             index_file.write("### "+dir_name+"\n")
             for note in os.listdir(os.path.join(notes_repo_path,dir_name)):
-                index_file.write("- ["+note+"](./"+dir_name+"/"+note+")\n")
-            index_file.write("\n<br><br>\n\n")
+                index_file.write("- ["+note.replace(".md","")+"](./"+dir_name+"/"+note+")\n")
+            index_file.write("\n\n")
 
-    index_file.write("\n-------------------------------\n\n")
-
-    for file_name in dir_list :
-        if not os.path.isdir(os.path.join(notes_repo_path,file_name)) and file_name != 'index.md':
-            index_file.write("- ["+file_name+"](./"+file_name+")\n")
+    print("Successfully Updated index.md in notes")
 
 def list_project_containers():
     bashCmd = ["docker", "ps","-a", "--format","{ \"NAME\":\"{{.Names}}\" , \"IMAGE\":\"{{.Image}}\" , \"STATUS\":\"{{.Status}}\" }"]
@@ -113,7 +118,7 @@ def create_and_publish_container(projectname):
         print("\nUnable to create image : "+project_image_name)
 
 #######################################################
-# Commands 
+# Commands
 #######################################################
 
 @click.group()
